@@ -2,45 +2,22 @@ import numpy as np
 import time
 import random
 import pickle
+
 import utils.deckops as dc
+from utils.misc import timer
+from utils.data import *
+
 import h5py
 import os
-import tensorflow as tf
-import tf_utils as t_u
+from agents.staticAgents import RandomAgent, GreedyAgent, HumanAgent
+from agents.dQAgent import *
 
-# graph = tf.Graph()
-#
-# with graph.as_default():
-# 	build_graph()
-# graph.finalize()
+randomAgent = RandomAgent()
+greedyAgent = GreedyAgent()
+humanAgent = HumanAgent()
 
-
-def convertToTensor(parameters):
-    params = {}
-    for key in parameters:
-        params[key] = tf.convert_to_tensor(parameters[key])
-    return params
-
-f = open("Parameters_100epochs_dropout.pkl", 'rb')
-params_100e_dropout = pickle.load(f)
-params_100e_dropout = convertToTensor(params_100e_dropout)
-f.close()
-
-
-
-globalSess = tf.Session()
-initializer = tf.global_variables_initializer()
-
-
-
-def timer(f,args,iters):
-    tic = time.time()
-    for i in range(iters):
-        f(*args)
-    toc = time.time()
-    print("%d ms"%(1000*(toc-tic)))
-    print("%f us/iter"%(1e6*(toc-tic)/iters))
-
+# contains all info about a game at a point
+# can be printed
 class GameState:
     def __init__(self, A_Name, B_Name, A_Hand, B_hand, history):
         self.A_Name = A_Name
@@ -69,96 +46,10 @@ class GameState:
         return s
 
 
-
-class randomAgent:
-    def __init__(self):
-        self.name = "Random"
-
-    def getMove(self, g):
-        return random.choice(dc.getMovesFromGameState(g))
-
-class greedyAgent:
-    def __init__(self):
-        self.name = "Greedy"
-
-    def getMove(self, g):
-        moves = dc.getMovesFromGameState(g)
-        return moves[0] if len(moves) == 1 else moves[1]
-
-def flattenSAGenerator(g, moves):
-    if len(g.history) >= 2:
-        histories = np.concatenate([
-                        dc.handToExpanded(np.sum(g.history[-2::-2], axis=0)).reshape(75),
-                        dc.handToExpanded(np.sum(g.history[-1::-2], axis=0)).reshape(75)])
-    elif len(g.history) == 1:
-        histories = np.concatenate([
-                        np.zeros(75,),
-                        dc.handToExpanded(g.history[0]).reshape(75)])
-    else:
-        histories = np.zeros((150,))
-    hand = g.A_Hand if len(g.history)%2 == 0 else g.B_Hand
-    SA = [np.concatenate([histories,
-                     dc.handToExpanded(hand-move).reshape(75),
-                     dc.handToExpanded(move).reshape(75)]) for move in moves]
-    SA = np.stack(SA).T
-    return SA
-
-
-class dQParameterSetInstance:
-    def __init__(self, parameters, tfsession):
-        W1 = parameters['W1']
-        b1 = parameters['b1']
-        W2 = parameters['W2']
-        b2 = parameters['b2']
-        W3 = parameters['W3']
-        b3 = parameters['b3']
-        self.X = tf.placeholder("float", [300, None])
-        self.Z1 = tf.add(tf.matmul(W1, self.X), b1)
-        self.A1 = tf.nn.relu(self.Z1)
-        self.Z2 = tf.add(tf.matmul(W2, self.A1), b2)
-        self.A2 = tf.nn.relu(self.Z2)
-        self.Z3 = tf.add(tf.matmul(W3, self.A2), b3)
-        self.A3 = tf.sigmoid(self.Z3)
-        self.sess = tfsession
-
-    def predict(self, x):
-        return self.sess.run(self.A3, feed_dict = {self.X: x})
-
-globalDQParamSetInstance = dQParameterSetInstance(params_100e_dropout, globalSess)
-# generateSA is a function that takes a gamestate, a list of legal moves,
-# and returns an arrays that represent (s, a) pairs to be fed into
-# something to evaluate them
-class dQAgent:
-    def __init__(self, verbosity=0, exploration_prob=.1,
-                 tfsession=globalSess, predictor = globalDQParamSetInstance, generateSA=flattenSAGenerator):
-        self.name = "dQAgent"
-        self.session = tfsession
-        self.predictor = predictor
-        self.generateSA = generateSA
-        self.exploration_prob = exploration_prob
-        self.verbosity = verbosity
-
-    def getMove(self, g):
-        moves = dc.getMovesFromGameState(g)
-        X = flattenSAGenerator(g, moves)
-        scores = self.predictor.predict(X)
-        if np.all(scores==0):
-            if len(moves) == 1:
-                return moves[0]
-            else:
-                return random.choice(moves[1:])
-        if random.random() < self.exploration_prob:
-            # sample the moves based on score (0-1)
-            moveInd = np.random.choice(np.arange(len(moves)), p=scores.reshape(-1)/np.sum(scores))
-        else:
-            moveInd = np.argmax(scores)
-        return moves[moveInd]
-
-
 # ~ 13.4 ms
 # A always goes first, but with a 50% chance will take an empty move
 # Returns list of gameStates and whether or not A won
-def game(agentA = randomAgent(), agentB = randomAgent(), verbose = 0):
+def game(agentA = randomAgent, agentB = randomAgent, verbose = 0):
     d = np.random.permutation(dc.deck)
     A = dc.cardsToHand(d[:18])
     B = dc.cardsToHand(d[18:36])
@@ -193,7 +84,17 @@ def game(agentA = randomAgent(), agentB = randomAgent(), verbose = 0):
             print(gameStates[-1])
     return gameStates, np.sum(A)<np.sum(B)
 
-def runXGamesSaveLastGameStates(fname, x=10000, agentA = randomAgent(), agentB = randomAgent()):
+def stdTest(paramFileName, numGames = 10000):
+    dQP = dQParameterSetInstance(paramFileName, globalSess)
+    dQA = DeepQAgent(predictor = dQP, exploration_prob=0)
+    vg = np.sum([game(dQA, greedyAgent)[1] for _ in range(numGames)])
+    vr = np.sum([game(dQA, randomAgent)[1] for _ in range(numGames)])
+    print("VS Greedy: %.3f%%\tVS Random: %.3f%%"%(100.*vg/numGames, 100.*vr/numGames))
+    metric = (1-1.*vg/numGames) * (1-1.*vr/numGames) * 10000
+    print("Standard metric: %.2f"%metric)
+
+
+def runXGamesSaveLastGameStates(fname, x=10000, agentA = randomAgent, agentB = randomAgent):
     finalGameStates = []
     timesAWon = 0
     for i in range(x):
@@ -313,4 +214,4 @@ def dataFileToLabeledData_1(fname):
     Y_A = f["Y_A"][...]
     Y_B = f["Y_B"][...]
     f.close()
-    return X_A, X_B, Y_A, Y_B
+    return X_A[:,:,0].T, X_B[:,:,0].T, Y_A[:,:,0].T, Y_B[:,:,0].T

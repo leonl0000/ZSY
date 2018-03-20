@@ -1,8 +1,6 @@
 """
-Cousera class code
+Modified Cousera class code
 """
-
-import h5py
 import numpy as np
 import tensorflow as tf
 import math
@@ -72,19 +70,6 @@ def predict(X, parameters, sess = tf.Session()):
         
     return prediction
 
-x = tf.placeholder("float", [300, None])
-# Z1 = tf.add(tf.matmul(W1, X), b1)
-# A1 = tf.nn.relu(Z1)
-# Z2 = tf.add(tf.matmul(W2, A1), b2)
-# A2 = tf.nn.relu(Z2)
-# Z3 = tf.add(tf.matmul(W3, A2), b3)
-def predictTensorParams(X, params, sess = tf.Session()):
-
-    Z3 = forward_propagation_for_predict(x, params)
-    A3 = tf.sigmoid(Z3)
-    prediction = sess.run(A3, feed_dict={x: X})
-    return prediction
-
 def forward_propagation_for_predict(X, parameters):
     """
     Implements the forward propagation for the model: LINEAR -> RELU -> LINEAR -> RELU -> LINEAR -> SOFTMAX
@@ -113,4 +98,3 @@ def forward_propagation_for_predict(X, parameters):
     Z3 = tf.add(tf.matmul(W3, A2), b3)                     # Z3 = np.dot(W3,Z2) + b3
     
     return Z3
-    

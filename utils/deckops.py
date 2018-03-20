@@ -7,7 +7,7 @@ import random
 '''
 deck = np.array([i/4+(i==53) for i in range(54)]).astype(np.int64)
 handStringArr = [' 3', ' 4', ' 5', ' 6', ' 7', ' 8', ' 9', '10', ' J', ' Q', ' K', ' A', ' 2', 'JB', 'JR']
-handString = ' 3| 4| 5| 6| 7| 8| 9|10| A| 2| J| Q| K|JB|JR'
+handString = ' 3| 4| 5| 6| 7| 8| 9|10| J| Q| K| A| 2|JB|JR'
 
 OpeningMovesSaveFileName = os.path.join(os.path.dirname(__file__), "openingMoves.npz")
 f = open(OpeningMovesSaveFileName, 'rb')
@@ -60,6 +60,7 @@ def listLegalCounters(hand, move):
     highCard = np.nonzero(move)[1][-1]
     possibleMoves = [np.roll(move, i) for i in range(1, 15-highCard)]
     legalMoves += [move for move in possibleMoves if (hand>=move).all()]
+    # TODO:: IF BOMB, DON"T ALLOW LOWER ORDER BOMB!!!
     legalMoves += list(Bombs[np.all(hand>=Bombs, axis=1)].reshape(-1,1,15))
     return legalMoves
 
