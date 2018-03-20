@@ -31,7 +31,9 @@ class zsyDenseHPSummary:
 
 
 class Model:
-    def __init__(self, layers,  dest_folder, dataFilename = 'data/1M RandvRand/T100k_1.h5', keep_prob=0.5, r_discount=1, c_discount=1):
+    def __init__(self, layers,  dest_folder,
+                 dataFilename = 'data/1M RandvRand/T100k_1.h5', keep_prob=0.5, r_discount=1, c_discount=1,
+                 paramFileName = None):
         self.X = tf.placeholder(tf.float32, [layers[0], None])
         self.Y = tf.placeholder(tf.float32, [2, None])
         self.layers = layers
@@ -42,12 +44,18 @@ class Model:
         self.params = {}
         self.home = os.path.abspath(dest_folder)
         self.nodes = {'A0': self.X, 'A_0': self.X} # underscore for w/o dropout
+        ld = True
+        if paramFileName is not None:
+            oldParams = pklLoad(paramFileName)
+            ld = False
         for i in range(1, len(layers)):
             # Nodes with '_' in middle indicate no dropout
             self.params['W' + str(i)] = tf.get_variable('W' + str(i), [layers[i], layers[i-1]],
-                                                   initializer=tf.contrib.layers.xavier_initializer())
+                                                   initializer=tf.contrib.layers.xavier_initializer() if ld else
+                                                        tf.constant_initializer(oldParams['W' + str(i)]))
             self.params['b' + str(i)] = tf.get_variable('b' + str(i), [layers[i],1],
-                                                   initializer=tf.zeros_initializer)
+                                                   initializer=tf.zeros_initializer if ld else
+                                                   tf.constant_initializer(oldParams['b' + str(i)]))
             self.nodes['Z' + str(i)] = tf.add(tf.matmul(self.params['W'+str(i)], self.nodes['A'+str(i-1)]), self.params['b'+str(i)],
                                          name='Z' + str(i))
             self.nodes['Z_' + str(i)] = tf.add(tf.matmul(self.params['W' + str(i)], self.nodes['A_' + str(i-1)]), self.params['b' + str(i)],
