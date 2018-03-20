@@ -93,6 +93,10 @@ def stdTest(paramFileName, numGames = 10000):
     metric = (1-1.*vg/numGames) * (1-1.*vr/numGames) * 10000
     print("Standard metric: %.2f"%metric)
 
+def runXGamesDeepQ(paramFileName, saveFileName, numGames = 100000, exploration_prob=0.1):
+    dQP = dQParameterSetInstance(paramFileName, globalSess)
+    dQA = DeepQAgent(predictor = dQP, exploration_prob=exploration_prob)
+    runXGamesSaveLastGameStates(saveFileName, numGames, dQA, dQA)
 
 def runXGamesSaveLastGameStates(fname, x=10000, agentA = randomAgent, agentB = randomAgent):
     finalGameStates = []

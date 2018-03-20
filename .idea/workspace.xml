@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7c3b7513-0787-46e7-b20e-0e31ba6bdb1d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.ipynb_checkpoints/Model_1-checkpoint.ipynb" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/Model_1-checkpoint.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Model_1.ipynb" afterPath="$PROJECT_DIR$/Model_1.ipynb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tf_utils.py" afterPath="$PROJECT_DIR$/tf_utils.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/deckops.py" afterPath="$PROJECT_DIR$/utils/deckops.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/runn.py" afterPath="$PROJECT_DIR$/utils/runn.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/model_generator.py" afterPath="$PROJECT_DIR$/model_generator.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/zsyGame.py" afterPath="$PROJECT_DIR$/zsyGame.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -27,8 +22,8 @@
       <file leaf-file-name="zsyGame.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/zsyGame.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
-              <caret line="109" column="46" lean-forward="false" selection-start-line="109" selection-start-column="46" selection-end-line="109" selection-end-column="46" />
+            <state relative-caret-position="286">
+              <caret line="98" column="65" lean-forward="false" selection-start-line="98" selection-start-column="65" selection-end-line="98" selection-end-column="65" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -48,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_generator.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="model_generator.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/model_generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-25">
-              <caret line="90" column="18" lean-forward="false" selection-start-line="90" selection-start-column="8" selection-end-line="90" selection-end-column="18" />
+            <state relative-caret-position="525">
+              <caret line="153" column="106" lean-forward="false" selection-start-line="153" selection-start-column="106" selection-end-line="153" selection-end-column="106" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -82,7 +77,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="data.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="data.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils/data.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="675">
@@ -186,9 +181,9 @@
         <option value="$PROJECT_DIR$/utils/deckops.py" />
         <option value="$PROJECT_DIR$/utils/runn.py" />
         <option value="$PROJECT_DIR$/agents/dQAgent.py" />
+        <option value="$PROJECT_DIR$/utils/data.py" />
         <option value="$PROJECT_DIR$/zsyGame.py" />
         <option value="$PROJECT_DIR$/model_generator.py" />
-        <option value="$PROJECT_DIR$/utils/data.py" />
       </list>
     </option>
   </component>
@@ -889,26 +884,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/zsyGame.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="109" column="46" lean-forward="false" selection-start-line="109" selection-start-column="46" selection-end-line="109" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model_generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-25">
-          <caret line="90" column="18" lean-forward="false" selection-start-line="90" selection-start-column="8" selection-end-line="90" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="675">
@@ -917,6 +892,26 @@
             <element signature="e#1371#2527#0" expanded="false" />
             <element signature="e#2572#3334#0" expanded="false" />
             <element signature="e#3385#3589#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/zsyGame.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="98" column="65" lean-forward="false" selection-start-line="98" selection-start-column="65" selection-end-line="98" selection-end-column="65" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model_generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="153" column="106" lean-forward="false" selection-start-line="153" selection-start-column="106" selection-end-line="153" selection-end-column="106" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
           </folding>
         </state>
       </provider>
