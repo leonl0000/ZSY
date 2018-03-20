@@ -4,10 +4,10 @@ import os
 import zsyGame as zsy
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tf_utils import random_mini_batches
 import pickle
 from datetime import timedelta
 import utils.data as data
+import math
 
 def saveHP(model):
     if not os.path.isdir(model.home):
@@ -105,12 +105,14 @@ class Model:
                 num_minibatches = int( m / minibatch_size)
                 if epoch == 0:
                     print("num minibatches:%d" % num_minibatches)
-                minibatches = random_mini_batches(self.X_Train, self.Y_Train, minibatch_size, 3)
-
+#                 minibatches = random_mini_batches(self.X_Train, self.Y_Train, minibatch_size, 3)
                 tic = time.time()
-                for minibatch in minibatches:
-                    (minibatch_X, minibatch_Y) = minibatch
-                    _, minibatch_cost = sess.run([optimizer, self.nodes['cost']], feed_dict={self.X: minibatch_X, self.Y: minibatch_Y})
+                permutation = list(np.random.permutation(m))
+                num_minibatches = math.ceil(m/minibatch_size)
+                for k in range(0, num_minibatches):
+                    _, minibatch_cost = sess.run([optimizer, self.nodes['cost']], feed_dict={
+                        self.X: self.X_Train[:,permutation[k * minibatch_size : min((k+1) * minibatch_size, m)]],
+                        self.Y: self.Y_Train[:,permutation[k * minibatch_size : min((k+1) * minibatch_size, m)]]})
                     epoch_cost += minibatch_cost / num_minibatches
                 toc = time.time()
 
