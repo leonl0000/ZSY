@@ -93,6 +93,20 @@ def stdTest(paramFileName, numGames = 10000):
     metric = (1-1.*vg/numGames) * (1-1.*vr/numGames) * 10000
     print("Standard metric: %.2f"%metric)
 
+# def runXGamesRetFinals(paramFileName, numGames = 20000, exploration_prob=0.1):
+#     dQP = dQParameterSetInstance(paramFileName, globalSess)
+#     dQA = DeepQAgent(predictor=dQP, exploration_prob=exploration_prob)
+#     print("Simulating...")
+#     finalGameStates = [game(dQA, dQA)[0][-1] for _ in range(numGames)]
+#     print("Converting...")
+#     X_A, X_B, Y_A, Y_B = gameStatesToLabeledData_1(finalGameStates)
+#     print("Stacking...")
+#     X_A = np.stack(X_A)
+#     X_B = np.stack(X_B)
+#     Y_A = np.stack(Y_A)
+#     Y_B = np.stack(Y_B)
+#     return X_A, X_B, Y_A, Y_B
+
 def runXGamesDeepQ(paramFileName, saveFileName, numGames = 20000, exploration_prob=0.1):
     dQP = dQParameterSetInstance(paramFileName, globalSess)
     dQA = DeepQAgent(predictor = dQP, exploration_prob=exploration_prob)
