@@ -56,17 +56,14 @@ class Model:
             self.params['b' + str(i)] = tf.get_variable('b' + str(i), [layers[i],1],
                                                    initializer=tf.zeros_initializer if ld else
                                                    tf.constant_initializer(oldParams['b' + str(i)]))
-            self.nodes['Z' + str(i)] = tf.add(tf.matmul(self.params['W'+str(i)], self.nodes['A'+str(i-1)]), self.params['b'+str(i)],
-                                         name='Z' + str(i))
-            self.nodes['Z_' + str(i)] = tf.add(tf.matmul(self.params['W' + str(i)], self.nodes['A_' + str(i-1)]), self.params['b' + str(i)],
-                                         name='Z_' + str(i))
+            self.nodes['Z' + str(i)] = tf.add(tf.matmul(self.params['W'+str(i)], self.nodes['A'+str(i-1)]), self.params['b'+str(i)])
+            self.nodes['Z_' + str(i)] = tf.add(tf.matmul(self.params['W'+str(i)], self.nodes['A_'+str(i-1)]), self.params['b' + str(i)])
             if i != len(layers)-1:
-                self.nodes['A' + str(i)] = tf.nn.dropout(tf.nn.relu(self.nodes['Z'+str(i)]), keep_prob,
-                                                    name='A' + str(i))
-                self.nodes['A_' + str(i)] = tf.nn.relu(self.nodes['Z_' + str(i)], name='A_' + str(i))
+                self.nodes['A' + str(i)] = tf.nn.dropout(tf.nn.relu(self.nodes['Z'+str(i)]), keep_prob)
+                self.nodes['A_' + str(i)] = tf.nn.relu(self.nodes['Z_' + str(i)])
             else:
-                self.nodes['A' + str(i)] = tf.sigmoid(self.nodes['Z'+str(i)], name='A' + str(i))
-                self.nodes['A_' + str(i)] = tf.sigmoid(self.nodes['Z_' + str(i)], name='A_' + str(i))
+                self.nodes['A' + str(i)] = tf.sigmoid(self.nodes['Z'+str(i)])
+                self.nodes['A_' + str(i)] = tf.sigmoid(self.nodes['Z_' + str(i)])
         self.lastNodeName = "A" + str(len(layers)-1)
         self.lastNodeName_ = "A_" + str(len(layers)-1)
         self.nodes['cost'] = tf.losses.log_loss(tf.transpose(self.nodes[self.lastNodeName]),
@@ -78,7 +75,7 @@ class Model:
         self.total_epochs = 0
         self.modelIter = 1
         while True:
-            if os.path.isfile(os.path.join(self.home, 'hyperparams_' + str(self.modelIter) + '.pkl')):
+            if os.path.isfile(os.path.join(self.home, 'params_'+os.path.basename(self.home)+'_'+str(self.modelIter)+'.pkl')):
                 self.modelIter += 1
             else:
                 break
