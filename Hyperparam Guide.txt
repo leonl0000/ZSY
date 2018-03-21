@@ -1,13 +1,20 @@
 2 - [300, 100, 100, 40, 1], 0.95, 0.95
 3 - [300, 100, 100, 40, 1], .9, 1
 4 - [300, 100, 100, 40, 1], 1, 0.9
-5 - [300, 200, 20, 1], 0.9, 1
+5 - [300, 400, 40, 1], 0.9, 1
+
+
+6 - [300, 400, 40, 1], 0.9, 1
+7 - [300, 400, 40, 1], 1, .9
+8 - 6, but trained for 10 epochs
+9 - [300, 400, 40, 1], 1, 1 - 10 ep
+10 - [300, 400, 40, 1], .8, 1 - 10 ep
+11 - [300, 400, 40, 1], .95, 1 - 10 ep
+12 - [300, 400, 40, 1], .8, 1 - 10 ep, LR 0.0001
 
 
 
-
-import model_generator as mg
-model = mg.Model([300, 200, 20, 1], 'Model5',  r_discount=.9, c_discount=1)
-mg.saveHP(model)
+import zsyGame as zsy
+zsy.stdTest(model.paramFileName, 100)
 model.Whole()
 
