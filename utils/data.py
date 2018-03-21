@@ -116,7 +116,10 @@ def dataFileToLabeledData_1(fname):
     Y_A = f["Y_A"][...]
     Y_B = f["Y_B"][...]
     f.close()
-    return X_A[:,:,0].T, X_B[:,:,0].T, Y_A[:,:,0].T, Y_B[:,:,0].T
+    if len(X_A.shape) == 2:
+        return X_A, X_B, Y_A, Y_B
+    else:
+        return X_A[:,:,0].T, X_B[:,:,0].T, Y_A[:,:,0].T, Y_B[:,:,0].T
 
 def convertY(Y, discount):
     Y_ = (Y[0]*discount**Y[1]).reshape(1,-1)
