@@ -14,7 +14,6 @@
 
 
 
-
 import zsyGame as zsy
 zsy.stdTest(model.paramFileName, 100)
 model.Whole()
