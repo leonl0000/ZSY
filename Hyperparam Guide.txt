@@ -13,7 +13,6 @@
 12 - [300, 400, 40, 1], .8, 1 - 10 ep, LR 0.0001
 
 
-
 import zsyGame as zsy
 zsy.stdTest(model.paramFileName, 100)
 model.Whole()
