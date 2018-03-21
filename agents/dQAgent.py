@@ -68,6 +68,10 @@ class dQParameterSetInstance:
 globalDQParamSetInstance = dQParameterSetInstance("Parameters_100epochs_dropout.pkl", globalSess)
 dQ2params = dQParameterSetInstance("Parameters_M1_100epochs.pkl", globalSess)
 
+def getDQA(paramFilename, exploration_prob=0):
+    dQP = dQParameterSetInstance(paramFilename, globalSess)
+    return DeepQAgent(exploration_prob=exploration_prob, predictor=dQP)
+
 # generateSA is a function that takes a gamestate, a list of legal moves,
 # and returns an arrays that represent (s, a) pairs to be fed into
 # something to evaluate them
