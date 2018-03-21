@@ -10,7 +10,8 @@ def simulate(paramFileName, outfileName, exploration_prob = 0.1, numGames=20000,
     str1 = "python zsyMultigameHelper.py " + paramFileName + " temp"
     str2 = ".h5 " + str(gamesPerIter) + " " + str(exploration_prob)
     commands = [str1 + str(i) + str2 for i in range(100)]
-    p.map(os.system, commands)
+    ret = p.map(os.system, commands)
+#     print(ret)
     outfiles = ["temp"+str(i)+".h5" for i in range(100)]
     DATA = [data.dataFileToLabeledData_1(outfile) for outfile in outfiles]
     X_A = np.concatenate([d[0] for d in DATA], axis=1)
