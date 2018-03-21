@@ -154,10 +154,10 @@ class Model:
             print("Train cost (No dropout):", train_cost)
             print("Test cost (No dropout):", dev_cost)
 
-    def TestModel(self):
-        zsy.stdTest(self.paramFileName)
+    def TestModel(self, numgames = 1000):
+        zsy.stdTest(self.paramFileName, numgames)
 
-    def GenerateTrainingData(self, numGames=100000, exploration_prob=0.1):
+    def GenerateTrainingData(self, numGames=20000, exploration_prob=0.1):
         fname = "T100k_%d.pkl"%(self.modelIter)
         zsy.runXGamesDeepQ(self.paramFileName, fname, numGames=numGames, exploration_prob=exploration_prob)
 

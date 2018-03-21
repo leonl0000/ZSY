@@ -93,10 +93,29 @@ def stdTest(paramFileName, numGames = 10000):
     metric = (1-1.*vg/numGames) * (1-1.*vr/numGames) * 10000
     print("Standard metric: %.2f"%metric)
 
-def runXGamesDeepQ(paramFileName, saveFileName, numGames = 100000, exploration_prob=0.1):
+def runXGamesDeepQ(paramFileName, saveFileName, numGames = 20000, exploration_prob=0.1):
     dQP = dQParameterSetInstance(paramFileName, globalSess)
     dQA = DeepQAgent(predictor = dQP, exploration_prob=exploration_prob)
-    runXGamesSaveLastGameStates(saveFileName, numGames, dQA, dQA)
+    print("Simulating...")
+    finalGameStates = [game(dQA, dQA)[0][-1] for _ in range(numGames)]
+    print("Converting...")
+    X_A, X_B, Y_A, Y_B = gameStatesToLabeledData_1(finalGameStates)
+    print("Saving...")
+    X_A = np.stack(X_A)
+    X_B = np.stack(X_B)
+    Y_A = np.stack(Y_A)
+    Y_B = np.stack(Y_B)
+    f = h5py.File(saveFileName, "w")
+    XAset = f.create_dataset("X_A", X_A.shape, compression="gzip")
+    XAset[...] = X_A
+    XBset = f.create_dataset("X_B", X_B.shape, compression="gzip")
+    XBset[...] = X_B
+    YAset = f.create_dataset("Y_A", Y_A.shape, compression="gzip")
+    YAset[...] = Y_A
+    YBset = f.create_dataset("Y_B", Y_B.shape, compression="gzip")
+    YBset[...] = Y_B
+    f.close()
+    print("done.")
 
 def runXGamesSaveLastGameStates(fname, x=10000, agentA = randomAgent, agentB = randomAgent):
     finalGameStates = []
