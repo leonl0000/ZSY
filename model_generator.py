@@ -78,7 +78,7 @@ class Model:
         self.total_epochs = 0
         self.modelIter = 1
         while True:
-            if os.path.isfile(os.path.join(self.home, 'hyperparams_' + str(self.modelIter))):
+            if os.path.isfile(os.path.join(self.home, 'hyperparams_' + str(self.modelIter) + '.pkl')):
                 self.modelIter += 1
             else:
                 break
