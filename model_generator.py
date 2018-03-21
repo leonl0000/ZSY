@@ -158,7 +158,7 @@ class Model:
         zsy.stdTest(self.paramFileName, numgames)
 
     def GenerateTrainingData(self, numGames=20000, exploration_prob=0.1):
-        fname = "T100k_%d.pkl"%(self.modelIter)
+        fname = os.join(self.home, "T100k_%d.pkl"%(self.modelIter))
         zsy.runXGamesDeepQ(self.paramFileName, fname, numGames=numGames, exploration_prob=exploration_prob)
 
     def Whole(self):
