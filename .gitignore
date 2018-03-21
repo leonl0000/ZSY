@@ -3,3 +3,4 @@ data/Archive
 data/
 *.pyc
 ~*
+__pycache__/
