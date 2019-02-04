@@ -59,9 +59,10 @@ def listLegalCounters(hand, move):
     legalMoves = [emptyMove]
     highCard = np.nonzero(move)[1][-1]
     possibleMoves = [np.roll(move, i) for i in range(1, 15-highCard)]
-    legalMoves += [move for move in possibleMoves if (hand>=move).all()]
-    # TODO:: IF BOMB, DON"T ALLOW LOWER ORDER BOMB!!!
-    legalMoves += list(Bombs[np.all(hand>=Bombs, axis=1)].reshape(-1,1,15))
+    legalMoves += [move for move in possibleMoves if (hand >= move).all()]
+    # If the move is NOT a bomb, then any bombs can beat it
+    if not (Bombs-move).any(axis=1).all():
+        legalMoves += list(Bombs[np.all(hand >= Bombs, axis=1)].reshape(-1, 1, 15))
     return legalMoves
 
 # ~ 460 [only tested on 1 hand]
